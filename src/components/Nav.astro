@@ -1,0 +1,69 @@
+---
+import Logo from './Logo.astro';
+import { Menu } from '@lucide/astro';
+import { site } from '../data/site';
+
+const links = [
+  { href: '#propuesta', label: 'Propuesta' },
+  { href: '#que-hacemos', label: 'Qué hacemos' },
+  { href: '#servicios', label: 'Servicios' },
+  { href: '#para-quien', label: 'Para quién' },
+  { href: '#como-trabajamos', label: 'Cómo trabajamos' },
+  { href: '#canales', label: 'Canales' },
+];
+---
+
+<header class="fixed inset-x-0 top-0 z-50 border-b border-white/[0.06] bg-ink/70 backdrop-blur-xl backdrop-saturate-150">
+  <nav class="container-x flex h-14 items-center justify-between" aria-label="Principal">
+    <a href="#inicio" class="flex items-center gap-2 text-fg">
+      <Logo class="h-7 w-7 text-indigo" title="" />
+      <span class="text-[17px] font-semibold tracking-tight">{site.name}</span>
+    </a>
+
+    <ul class="hidden items-center gap-7 text-[13px] text-muted lg:flex">
+      {links.map((l) => (
+        <li>
+          <a href={l.href} data-navlink class="relative py-1 transition hover:text-fg aria-[current=true]:text-fg after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:origin-left after:scale-x-0 after:bg-orange after:transition-transform after:duration-500 aria-[current=true]:after:scale-x-100">{l.label}</a>
+        </li>
+      ))}
+    </ul>
+
+    <div class="flex items-center gap-2">
+      <a href="#contacto" class="btn btn-primary !px-4 !py-1.5 text-[13px]">Contacto</a>
+
+      <details class="group relative lg:hidden">
+        <summary class="flex h-9 w-9 cursor-pointer list-none items-center justify-center rounded-full text-muted hover:text-fg [&::-webkit-details-marker]:hidden" aria-label="Abrir menú">
+          <Menu class="h-5 w-5" />
+        </summary>
+        <ul class="card absolute right-0 mt-3 w-56 space-y-1 p-3 text-[15px] shadow-2xl shadow-black/50">
+          {links.map((l) => (
+            <li><a href={l.href} class="block rounded-xl px-3 py-2 text-muted hover:bg-white/5 hover:text-fg">{l.label}</a></li>
+          ))}
+        </ul>
+      </details>
+    </div>
+  </nav>
+</header>
+
+<script>
+  // Cierra el menú móvil al elegir un enlace.
+  document.querySelectorAll('header details a').forEach((a) =>
+    a.addEventListener('click', () => a.closest('details')?.removeAttribute('open')),
+  );
+
+  // Resalta en el menú la sección que se está viendo.
+  const navLinks = [...document.querySelectorAll<HTMLAnchorElement>('[data-navlink]')];
+  const sections = navLinks
+    .map((a) => document.querySelector<HTMLElement>(a.getAttribute('href')!))
+    .filter((s): s is HTMLElement => !!s);
+  const spy = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        if (!e.isIntersecting) continue;
+        navLinks.forEach((a) => a.setAttribute('aria-current', String(a.getAttribute('href') === `#${e.target.id}`)));
+      }
+    },
+    { rootMargin: '-45% 0px -50% 0px' },
+  );
+  sections.forEach((s) => spy.observe(s));
+</script>

@@ -1,0 +1,57 @@
+---
+/**
+ * Espacio para foto.
+ * - `src` null → marco reservado con la descripción de la foto sugerida.
+ * - `browser` → envuelve la imagen en una ventana de navegador con la URL indicada.
+ */
+import { Image } from 'astro:assets';
+import { Image as ImageIcon } from '@lucide/astro';
+
+interface Props {
+  src: ImageMetadata | string | null | undefined;
+  alt: string;
+  hint?: string;
+  browser?: string;
+  class?: string;
+}
+const { src, alt, hint = '', browser, class: className = 'aspect-[4/3]' } = Astro.props;
+---
+
+{
+  browser && src ? (
+    <figure class="overflow-hidden rounded-2xl border border-white/10 bg-card">
+      <div class="flex items-center gap-3 border-b border-white/[0.06] px-4 py-3">
+        <span class="flex gap-1.5" aria-hidden="true">
+          <i class="h-2.5 w-2.5 rounded-full bg-white/15" />
+          <i class="h-2.5 w-2.5 rounded-full bg-white/15" />
+          <i class="h-2.5 w-2.5 rounded-full bg-white/15" />
+        </span>
+        <span class="mx-auto truncate rounded-md bg-ink px-3 py-1 text-xs text-muted">{browser}</span>
+        <span class="w-[42px]" aria-hidden="true" />
+      </div>
+      <div class:list={['overflow-hidden', className]}>
+        {typeof src === 'string' ? (
+          <img src={src} alt={alt} loading="lazy" class="h-full w-full object-cover object-top" />
+        ) : (
+          <Image src={src} alt={alt} widths={[640, 1024, 1440]} sizes="(min-width: 1024px) 1024px, 100vw" class="h-full w-full object-cover object-top" />
+        )}
+      </div>
+    </figure>
+  ) : (
+    <div class:list={['relative overflow-hidden rounded-3xl', className]}>
+      {src ? (
+        typeof src === 'string' ? (
+          <img src={src} alt={alt} loading="lazy" class="h-full w-full object-cover" />
+        ) : (
+          <Image src={src} alt={alt} class="h-full w-full object-cover" />
+        )
+      ) : (
+        <div class="flex h-full w-full flex-col items-center justify-center gap-3 rounded-3xl border border-dashed border-white/15 bg-card p-6 text-center">
+          <ImageIcon class="h-8 w-8 text-subtle" stroke-width={1.5} />
+          <p class="text-sm font-medium text-muted">Espacio para foto</p>
+          <p class="max-w-xs text-xs text-subtle">{hint}</p>
+        </div>
+      )}
+    </div>
+  )
+}

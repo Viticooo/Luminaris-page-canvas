@@ -1,0 +1,42 @@
+---
+import { ArrowDown } from '@lucide/astro';
+import Logo from './Logo.astro';
+import PhotoSlot from './PhotoSlot.astro';
+import { heroOptions, heroChoice, projects, site } from '../data/site';
+
+const hero = heroOptions[heroChoice] ?? heroOptions[0];
+const featured = projects.terapianidia;
+---
+
+<section id="inicio" class="pt-36 pb-20 sm:pt-44">
+  <div class="container-x text-center">
+    <div data-reveal class="mb-8 flex justify-center">
+      <Logo class="h-16 w-16 text-indigo" animated />
+    </div>
+
+    <p data-reveal class="mb-5 text-[15px] font-medium text-indigo-soft">{site.name} · Modelo Canvas</p>
+
+    <h1 data-reveal style="--delay:80ms" class="mx-auto max-w-4xl text-5xl font-semibold tracking-tight text-balance sm:text-6xl md:text-7xl">
+      {hero.title}
+    </h1>
+
+    <p data-reveal style="--delay:160ms" class="mx-auto mt-7 max-w-2xl text-lg leading-relaxed text-muted text-pretty sm:text-xl">
+      {hero.subtitle}
+    </p>
+
+    <div data-reveal style="--delay:240ms" class="mt-10 flex flex-wrap items-center justify-center gap-3">
+      <a href="#contacto" class="btn btn-primary">Escríbenos</a>
+      <a href="#propuesta" class="btn btn-ghost">
+        Conoce nuestro modelo <ArrowDown class="h-4 w-4" />
+      </a>
+    </div>
+
+    <div data-reveal="scale" style="--delay:320ms" class="mx-auto mt-20 max-w-5xl text-left">
+      <PhotoSlot src={featured.image} alt={`Sitio web de ${featured.name}`} browser="terapianidia.com" class="aspect-[16/10]" />
+      <p class="mt-4 text-center text-sm text-subtle">
+        {featured.description}
+        <a href={featured.url} target="_blank" rel="noopener" class="ml-1 text-indigo-soft hover:text-fg">Ver sitio ↗</a>
+      </p>
+    </div>
+  </div>
+</section>

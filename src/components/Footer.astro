@@ -1,0 +1,16 @@
+---
+import Logo from './Logo.astro';
+import { site } from '../data/site';
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-white/[0.06] py-10">
+  <div class="container-x flex flex-col items-center justify-between gap-4 text-sm text-subtle sm:flex-row">
+    <a href="#inicio" class="flex items-center gap-2 text-muted hover:text-fg">
+      <Logo class="h-5 w-5 text-indigo" title="" />
+      <span class="font-semibold">{site.name}</span>
+    </a>
+    <a href={`mailto:${site.email}`} class="hover:text-fg">{site.email}</a>
+    <p>© {year} {site.name}. Todos los derechos reservados.</p>
+  </div>
+</footer>

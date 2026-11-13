@@ -1,0 +1,81 @@
+---
+import '@fontsource-variable/inter';
+import '../styles/global.css';
+import { site } from '../data/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  noindex?: boolean;
+}
+
+const { title = `${site.name} — Modelo Canvas`, description = site.description, noindex = false } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#0a0a1f" />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+    <script is:inline>document.documentElement.classList.add('js');</script>
+  </head>
+  <body>
+    <slot />
+
+    <script>
+      const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // Aparición al hacer scroll. Al terminar se quita el atributo para que
+      // los efectos hover de cada elemento usen su propia transición.
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            if (!e.isIntersecting) continue;
+            const el = e.target as HTMLElement;
+            el.classList.add('is-visible');
+            const done = (ev: TransitionEvent) => {
+              if (ev.target !== el || ev.propertyName !== 'opacity') return;
+              el.removeAttribute('data-reveal');
+              el.removeEventListener('transitionend', done);
+            };
+            el.addEventListener('transitionend', done);
+            io.unobserve(el);
+          }
+        },
+        { rootMargin: '0px 0px -10% 0px' },
+      );
+      document.querySelectorAll<HTMLElement>('[data-reveal]').forEach((el) => io.observe(el));
+
+      // Contadores que suben desde 0 al aparecer.
+      const counters = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            if (!e.isIntersecting) continue;
+            const el = e.target as HTMLElement;
+            const target = Number(el.dataset.countup);
+            counters.unobserve(el);
+            if (reduced) continue;
+            const start = performance.now();
+            const dur = 1400;
+            const tick = (now: number) => {
+              const p = Math.min(1, (now - start) / dur);
+              el.textContent = String(Math.round(target * (1 - Math.pow(1 - p, 3))));
+              if (p < 1) requestAnimationFrame(tick);
+            };
+            requestAnimationFrame(tick);
+          }
+        },
+        { threshold: 0.6 },
+      );
+      document.querySelectorAll<HTMLElement>('[data-countup]').forEach((el) => counters.observe(el));
+    </script>
+  </body>
+</html>

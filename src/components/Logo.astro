@@ -1,0 +1,20 @@
+---
+/**
+ * Logo de Luminaris (misma geometría que los SVG de src/brand).
+ * Se dibuja inline para poder cambiar su color con `class` (usa currentColor).
+ * `animated` hace destellar la estrella.
+ */
+interface Props {
+  class?: string;
+  title?: string;
+  animated?: boolean;
+}
+const { class: className = 'h-8 w-8 text-indigo', title = 'Luminaris', animated = false } = Astro.props;
+---
+
+<svg viewBox="0 0 240 240" class={className} role="img" aria-label={title || undefined} aria-hidden={title ? undefined : 'true'} fill="currentColor">
+  <path d="M91,26 C80,60 62,110 51,174 Q96,152 150,121 L150,130 Q70,166 24,222 C34,170 58,100 91,26 Z"></path>
+  <path
+    class:list={[animated && 'twinkle']}
+    d="M150,84 Q154.2,119.8 176,124 Q154.2,128.2 150,164 Q145.8,128.2 124,124 Q145.8,119.8 150,84 Z"></path>
+</svg>

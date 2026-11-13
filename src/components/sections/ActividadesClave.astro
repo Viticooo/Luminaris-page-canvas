@@ -1,0 +1,77 @@
+---
+import SectionHeader from '../SectionHeader.astro';
+import PhotoSlot from '../PhotoSlot.astro';
+import AutomationFlow from '../illustrations/AutomationFlow.astro';
+import NfcPlate from '../illustrations/NfcPlate.astro';
+import { images, projects } from '../../data/site';
+
+const gary = projects.garycapture;
+
+const items = [
+  {
+    title: 'Páginas y aplicaciones web',
+    text: 'Diseñamos y desarrollamos sitios y aplicaciones web a la medida de tu negocio.',
+    image: gary.image,
+    browser: 'garycapture.pages.dev',
+    examples: [projects.terapianidia, gary],
+    hint: '',
+  },
+  {
+    title: 'Automatización de procesos',
+    text: 'Creamos scripts que se encargan de las tareas repetitivas para que tu equipo se enfoque en lo importante.',
+    image: images.automatizacion,
+    illustration: AutomationFlow,
+    hint: '',
+  },
+  {
+    title: 'Placas con QR y NFC',
+    text: 'Placas para que tus clientes califiquen tu negocio con solo escanear un código o acercar su celular.',
+    image: images.placas,
+    illustration: NfcPlate,
+    hint: '',
+  },
+];
+---
+
+<section id="que-hacemos" class="section bg-ink-2">
+  <div class="container-x">
+    <SectionHeader
+      canvas="Actividades clave"
+      title="Lo que hacemos."
+      lead="Soluciones digitales para que tu negocio funcione mejor y llegue a más personas."
+    />
+
+    <div class="mt-20 space-y-24 sm:space-y-32">
+      {
+        items.map((it, i) => (
+          <div class="grid items-center gap-10 md:grid-cols-2 md:gap-16">
+            <div data-reveal class:list={[i % 2 === 1 && 'md:order-2']}>
+              <p class="text-sm font-semibold text-orange">0{i + 1}</p>
+              <h3 class="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">{it.title}</h3>
+              <p class="mt-4 max-w-md text-lg leading-relaxed text-muted">{it.text}</p>
+              {it.examples && (
+                <ul class="mt-6 space-y-2 text-[15px]">
+                  {it.examples.map((p) => (
+                    <li>
+                      <a href={p.url} target="_blank" rel="noopener" class="text-indigo-soft hover:text-fg">
+                        {p.name} ↗
+                      </a>
+                      <span class="text-subtle"> — {p.description}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+            <div data-reveal="scale" style="--delay:120ms">
+              {!it.image && it.illustration ? (
+                <it.illustration />
+              ) : (
+                <PhotoSlot src={it.image} alt={it.title} hint={it.hint} browser={it.browser} />
+              )}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

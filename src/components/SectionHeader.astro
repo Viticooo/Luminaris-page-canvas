@@ -1,0 +1,20 @@
+---
+/**
+ * Encabezado de sección.
+ * `canvas` es el nombre del bloque original del Modelo Canvas (se muestra como etiqueta).
+ */
+interface Props {
+  canvas: string;
+  title: string;
+  lead?: string;
+  align?: 'left' | 'center';
+}
+const { canvas, title, lead, align = 'left' } = Astro.props;
+const center = align === 'center';
+---
+
+<div class:list={['max-w-3xl', center && 'mx-auto text-center']} data-reveal>
+  <p class="mb-4 text-[13px] font-semibold uppercase tracking-[0.18em] text-orange">{canvas}</p>
+  <h2 class="text-4xl font-semibold tracking-tight text-balance sm:text-5xl md:text-6xl">{title}</h2>
+  {lead && <p class="mt-6 text-lg leading-relaxed text-muted text-pretty sm:text-xl">{lead}</p>}
+</div>
